@@ -1,30 +1,58 @@
 import cv2
 
-cam = cv2.VideoCapture(1)# create a VideoCapture object that reads video the camera
-cam.set(3, 660)# set the width
-cam.set(4, 500)# set the height 
-faceDetector = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')# create Cascade Classifier model that used to detect face
+# Create a VideoCapture object that reads video from the camera
+camera = cv2.VideoCapture(1)
 
-while True:
-    retV, frame = cam.read()# read the Frame from camera
-    color = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)# convert the frame to GrayScale
-    faces = faceDetector.detectMultiScale(color, 1.2, 5)# coordinates of the bounding box around the face
-    
-    for (x, y, w, h) in faces:
-        frame = cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 225, 63), 2)# draw a rectangle around the face in the face 
-        rec_face = color[y : y + h, x : x + w]# extract the ROI that corresponds to the face
+# Set the width and height of the camera frames
+camera.set(cv2.CAP_PROP_FRAME_WIDTH, 660)
+camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 500)
 
-        # calculate coordinates of text
-        text_x = x + int(w / 2.3)
-        text_y = y + h + 20  # add 20 pixels to the y-coordinate to place text below the bounding box
+# Load the face detection cascade classifier
+face_detector = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
-        # draw text on frame
-        cv2.putText(frame, 'face', (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 225, 63), 2)
-    
-    cv2.imshow('WEBCAM', frame)# calling Camera frame
-    close = cv2.waitKey(1) & 0xFF# declare exit variable
-    if close == 27 or close == ord('n'):# conditional check for exit
-        break
-    
-cam.release()
-cv2.destroyAllWindows()
+def detect_faces():
+    """
+    Continuously read frames from the camera, detect faces in each frame,
+    and draw a rectangle around each face.
+    """
+    while True:
+        # Read a frame from the camera
+        ret, frame = camera.read()
+
+        # Check if the frame was successfully read from the camera
+        if not ret:
+            print("Error: Cannot read from camera")
+            break
+
+        try:
+            # Convert the frame to grayscale
+            gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        except cv2.error:
+            # If the frame cannot be converted to grayscale, skip this frame
+            print("Error: Cannot convert frame to grayscale")
+            continue
+
+        # Detect faces in the grayscale frame
+        faces = face_detector.detectMultiScale(gray_frame, scaleFactor=1.2, minNeighbors=5)
+
+        # Draw a rectangle around each detected face
+        for (x, y, w, h) in faces:
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 225, 63), 2)
+            text_x = x + int(w / 2.3)
+            text_y = y + h + 20
+            cv2.putText(frame, 'face', (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 225, 63), 1)
+
+        # Display the frame with the detected faces
+        cv2.imshow('WEBCAM', frame)
+
+        # Check if the user wants to exit the program
+        close = cv2.waitKey(1) & 0xFF
+        if close == 27 or close == ord('n'):
+            break
+
+    # Release the camera and destroy all windows
+    camera.release()
+    cv2.destroyAllWindows()
+
+# Call the detect_faces function to start the face detection program
+detect_faces()
