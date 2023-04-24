@@ -1,7 +1,7 @@
 import cv2
 
 # Create a VideoCapture object that reads video from the camera
-camera = cv2.VideoCapture(1)
+camera = cv2.VideoCapture(0)
 
 # Set the width and height of the camera frames
 camera.set(cv2.CAP_PROP_FRAME_WIDTH, 660)
@@ -43,7 +43,7 @@ def detect_faces():
             cv2.putText(frame, 'face', (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 225, 63), 1)
 
         # Display the frame with the detected faces
-        cv2.imshow('WEBCAM', frame)
+        cv2.imshow('Face-Detect', frame)
 
         # Check if the user wants to exit the program
         close = cv2.waitKey(1) & 0xFF
