@@ -28,14 +28,14 @@ def detect_faces():
             # Convert the frame to grayscale
             gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         except cv2.error:
-            # If the frame cannot be converted to grayscale, skip this frame
+            # If the frame cannot be converted to grayscale, this will skip
             print("Error: Cannot convert frame to grayscale")
             continue
 
         # Detect faces in the grayscale frame
         faces = face_detector.detectMultiScale(gray_frame, scaleFactor=1.2, minNeighbors=5)
 
-        # Draw a rectangle around each detected face
+        # Draw a rectangle around each detected faces
         for (x, y, w, h) in faces:
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 225, 63), 2)
             text_x = x + int(w / 2.3)
