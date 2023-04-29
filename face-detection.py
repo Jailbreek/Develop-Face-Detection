@@ -19,7 +19,7 @@ def detect_faces():
         # Read a frame from the camera
         ret, frame = camera.read()
 
-        # Check if the frame was successfully read from the camera
+        # Checking if the frame was successfully read from the camera
         if not ret:
             print("Error: Cannot read from camera")
             break
