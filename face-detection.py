@@ -1,7 +1,7 @@
 import cv2
 
 # Create a VideoCapture object that reads video from the camera
-camera = cv2.VideoCapture(0)
+camera = cv2.VideoCapture(1)
 
 # Set the width and height of the camera frames
 camera.set(cv2.CAP_PROP_FRAME_WIDTH, 660)
@@ -9,6 +9,7 @@ camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 500)
 
 # Load the face detection cascade classifier
 face_detector = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
 
 def detect_faces():
     """
@@ -33,14 +34,16 @@ def detect_faces():
             continue
 
         # Detect faces in the grayscale frame
-        faces = face_detector.detectMultiScale(gray_frame, scaleFactor=1.2, minNeighbors=5)
+        faces = face_detector.detectMultiScale(
+            gray_frame, scaleFactor=1.2, minNeighbors=5)
 
         # Draw a rectangle around each detected faces
         for (x, y, w, h) in faces:
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 225, 63), 2)
             text_x = x + int(w / 2.3)
             text_y = y + h + 20
-            cv2.putText(frame, 'face', (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 225, 63), 1)
+            cv2.putText(frame, 'face', (text_x, text_y),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 225, 63), 1)
 
         # Display the frame with the detected faces
         cv2.imshow('Face-Detect', frame)
@@ -53,6 +56,7 @@ def detect_faces():
     # Release the camera and destroy all windows
     camera.release()
     cv2.destroyAllWindows()
+
 
 # Call the detect_faces function to start the face detection program
 detect_faces()
