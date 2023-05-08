@@ -1,7 +1,7 @@
 import cv2
 
 # Create a VideoCapture object that reads video from the camera
-camera = cv2.VideoCapture(0)
+camera = cv2.VideoCapture(1)
 
 # Set the width and height of the camera frames
 camera.set(cv2.CAP_PROP_FRAME_WIDTH, 660)
